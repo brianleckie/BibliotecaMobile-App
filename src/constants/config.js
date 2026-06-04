@@ -1,2 +1,1 @@
-// Cambiá esta URL cuando el backend esté deployado en Railway
-export const API_BASE_URL = 'http://localhost:8000';
+export const API_BASE_URL = 'https://bibliotecamobile-production.up.railway.app';
