@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import escudo from '../assets/escudo.png';
@@ -10,8 +10,14 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { saveToken } = useAuth();
+  const { token, saveToken } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Si ya está logueado, ir al catálogo
+  if (token) return <Navigate to="/catalogo" replace />;
+
+  const message = location.state?.message;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +30,7 @@ export default function Login() {
     try {
       const { data } = await login(username, password);
       saveToken(data.access, data.refresh);
-      navigate('/catalogo');
+      navigate('/mis-prestamos');
     } catch {
       setError('Usuario o contraseña incorrectos.');
     } finally {
@@ -71,6 +77,22 @@ export default function Login() {
         <div style={{ fontFamily: 'Lora, serif', fontSize: 21, fontWeight: 600, color: 'var(--ink)' }}>
           Iniciá sesión
         </div>
+        <div style={{ fontSize: 13, color: 'var(--muted)' }}>
+          para acceder a tus préstamos y perfil
+        </div>
+
+        {/* Mensaje de redirección (desde ProtectedRoute) */}
+        {message && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            background: 'var(--warn-bg)', color: 'var(--warn)',
+            borderRadius: 10, padding: '10px 12px',
+            fontSize: 13, fontWeight: 500,
+          }}>
+            <Icon name="lock" size={15} stroke={2.2} />
+            {message}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -90,7 +112,7 @@ export default function Login() {
                   autoFocus
                   style={{
                     flex: 1, border: 'none', outline: 'none', background: 'none',
-                    fontSize: 15, color: 'var(--ink)',
+                    fontSize: 16, color: 'var(--ink)',
                   }}
                 />
               </div>
@@ -111,7 +133,7 @@ export default function Login() {
                   placeholder="••••••••"
                   style={{
                     flex: 1, border: 'none', outline: 'none', background: 'none',
-                    fontSize: 15, color: 'var(--ink)',
+                    fontSize: 16, color: 'var(--ink)',
                   }}
                 />
               </div>
@@ -145,6 +167,19 @@ export default function Login() {
             {loading ? 'Ingresando…' : 'Ingresar'}
           </button>
         </form>
+
+        <button
+          onClick={() => navigate('/catalogo')}
+          style={{
+            border: 'none', background: 'none', cursor: 'pointer',
+            color: 'var(--navy)', fontSize: 13.5, fontWeight: 500,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            padding: '4px 0',
+          }}
+        >
+          <Icon name="back" size={15} stroke={2.2} color="var(--navy)" />
+          Volver al catálogo
+        </button>
 
         <div style={{ flex: 1 }} />
         <div style={{ textAlign: 'center', fontSize: 11, color: 'var(--faint)', paddingBottom: 6 }}>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getLibro } from '../services/api';
+import { autoresStr } from '../utils/autores';
 import { AppBarBack } from '../components/AppBar';
 import Cover from '../components/Cover';
 import Icon from '../components/Icon';
@@ -19,15 +20,7 @@ export default function DetalleLibro() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const autoresStr = (autores) => {
-    if (!autores) return '—';
-    if (Array.isArray(autores)) {
-      return autores.map(a =>
-        a.nombres ? `${a.nombres} ${a.apellidos ?? ''}`.trim() : (a.nombre ?? String(a))
-      ).join(', ');
-    }
-    return String(autores);
-  };
+
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>

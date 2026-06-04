@@ -2,9 +2,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Icon from './Icon';
 
 const TABS = [
-  { id: 'catalogo',      path: '/catalogo',       label: 'Catálogo',   icon: 'book' },
-  { id: 'mis-prestamos', path: '/mis-prestamos',   label: 'Préstamos',  icon: 'bookmark' },
-  { id: 'perfil',        path: '/perfil',          label: 'Perfil',     icon: 'user' },
+  { id: 'catalogo',   path: '/catalogo',   label: 'Catálogo',   icon: 'book' },
+  { id: 'autores',    path: '/autores',    label: 'Autores',    icon: 'user' },
+  { id: 'categorias', path: '/categorias', label: 'Categorías', icon: 'filter' },
 ];
 
 export default function BottomNav() {
