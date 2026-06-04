@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getLibros, getCategorias } from '../services/api';
+import { autoresStr } from '../utils/autores';
 import { AppBar } from '../components/AppBar';
 import BottomNav from '../components/BottomNav';
 import Cover from '../components/Cover';
@@ -17,10 +18,15 @@ function useDebounce(value, delay) {
 }
 
 export default function Catalogo() {
+  const [searchParams] = useSearchParams();
+  const initialCatId = searchParams.get('categoria_id')
+    ? Number(searchParams.get('categoria_id'))
+    : null;
+
   const [busqueda, setBusqueda] = useState('');
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const [categorias, setCategorias] = useState([]);
-  const [categoriaId, setCategoriaId] = useState(null);
+  const [categoriaId, setCategoriaId] = useState(initialCatId);
   const [libros, setLibros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -69,16 +75,6 @@ export default function Catalogo() {
   useEffect(() => {
     fetchLibros();
   }, [fetchLibros]);
-
-  const autoresStr = (autores) => {
-    if (!autores) return '';
-    if (Array.isArray(autores)) {
-      return autores.map(a =>
-        a.nombres ? `${a.nombres} ${a.apellidos ?? ''}`.trim() : (a.nombre ?? String(a))
-      ).join(', ');
-    }
-    return String(autores);
-  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
@@ -202,7 +198,7 @@ export default function Catalogo() {
           ) : (
             libros.map(libro => {
               const disp = (libro.copias_disponibles ?? 0) > 0;
-              const catLabel = libro.categoria?.nombre ?? libro.categoria ?? '';
+              const catLabel = libro.categoria?.descripcion ?? libro.categoria?.nombre ?? libro.categoria ?? '';
               const anio = libro.anio ?? libro.año ?? '';
               return (
                 <button
