@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import escudo from '../assets/escudo.png';
+import Icon from '../components/Icon';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -13,6 +15,10 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!username.trim() || !password.trim()) {
+      setError('Ingresá tu usuario y contraseña.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
@@ -27,46 +33,99 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-lg w-full max-w-sm p-8">
-        <div className="text-center mb-8">
-          <div className="text-5xl mb-3">📚</div>
-          <h1 className="text-2xl font-bold text-[#1e3a5f]">Biblioteca Escolar</h1>
-          <p className="text-gray-500 text-sm mt-1">Ingresá con tus datos</p>
+    <div style={{
+      minHeight: '100vh', display: 'flex', flexDirection: 'column',
+      background: 'var(--navy)',
+    }}>
+      {/* Encabezado navy */}
+      <div style={{
+        padding: '42px 28px 38px',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: 16, textAlign: 'center', color: '#fff',
+      }}>
+        <div style={{
+          width: 76, height: 76, borderRadius: 999,
+          background: '#fff', border: '1.5px solid rgba(255,255,255,.55)',
+          boxShadow: '0 1px 4px rgba(0,0,0,.18)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+        }}>
+          <img src={escudo} alt="Escudo C.T.N.E." style={{ width: '84%', height: '84%', objectFit: 'contain' }} />
+        </div>
+        <div>
+          <div style={{ fontFamily: 'Lora, serif', fontSize: 25, fontWeight: 600, lineHeight: 1.2 }}>
+            Biblioteca Escolar
+          </div>
+          <div style={{ fontSize: 12, opacity: .72, letterSpacing: '.12em', textTransform: 'uppercase', marginTop: 5 }}>
+            Colegio Técnico Nacional
+          </div>
+        </div>
+      </div>
+
+      {/* Hoja blanca con formulario */}
+      <div style={{
+        flex: 1, background: 'var(--bg)',
+        borderRadius: '26px 26px 0 0',
+        padding: '30px 26px',
+        display: 'flex', flexDirection: 'column', gap: 16,
+      }}>
+        <div style={{ fontFamily: 'Lora, serif', fontSize: 21, fontWeight: 600, color: 'var(--ink)' }}>
+          Iniciá sesión
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Usuario
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoFocus
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
-              placeholder="Tu nombre de usuario"
-            />
-          </div>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--muted)' }}>Usuario</label>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 12, padding: '0 14px', height: 52,
+              }}>
+                <Icon name="user" size={19} color="var(--faint)" stroke={1.9} />
+                <input
+                  type="text"
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                  placeholder="Tu usuario o carnet"
+                  autoFocus
+                  style={{
+                    flex: 1, border: 'none', outline: 'none', background: 'none',
+                    fontSize: 15, color: 'var(--ink)',
+                  }}
+                />
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
-              placeholder="Tu contraseña"
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--muted)' }}>Contraseña</label>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 12, padding: '0 14px', height: 52,
+              }}>
+                <Icon name="lock" size={19} color="var(--faint)" stroke={1.9} />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  style={{
+                    flex: 1, border: 'none', outline: 'none', background: 'none',
+                    fontSize: 15, color: 'var(--ink)',
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-3 py-2">
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: 'var(--no-bg)', color: 'var(--no)',
+              borderRadius: 10, padding: '10px 12px',
+              fontSize: 13, fontWeight: 500,
+            }}>
+              <Icon name="x" size={15} stroke={2.4} />
               {error}
             </div>
           )}
@@ -74,11 +133,23 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#1e3a5f] text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-[#16304f] transition-colors disabled:opacity-60"
+            style={{
+              marginTop: 4, height: 52, border: 'none', borderRadius: 12,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              background: 'var(--navy)', color: '#fff',
+              fontSize: 15.5, fontWeight: 600, letterSpacing: '.01em',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              opacity: loading ? .7 : 1,
+            }}
           >
-            {loading ? 'Ingresando...' : 'Ingresar'}
+            {loading ? 'Ingresando…' : 'Ingresar'}
           </button>
         </form>
+
+        <div style={{ flex: 1 }} />
+        <div style={{ textAlign: 'center', fontSize: 11, color: 'var(--faint)', paddingBottom: 6 }}>
+          Acceso para estudiantes y docentes del C.T.N.E.
+        </div>
       </div>
     </div>
   );

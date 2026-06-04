@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPerfil } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import Navbar from '../components/Navbar';
+import { AppBar } from '../components/AppBar';
+import BottomNav from '../components/BottomNav';
+import Icon from '../components/Icon';
 
 export default function Perfil() {
   const [perfil, setPerfil] = useState(null);
@@ -21,64 +23,110 @@ export default function Perfil() {
     navigate('/login');
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="max-w-md mx-auto px-4 py-6">
-        <h2 className="text-2xl font-bold text-[#1e3a5f] mb-5">Mi Perfil</h2>
+  const nombre = (
+    perfil?.nombre
+    ?? (`${perfil?.first_name ?? ''} ${perfil?.last_name ?? ''}`.trim() || null)
+    ?? perfil?.username
+    ?? ''
+  );
 
+  const inicial = nombre?.[0]?.toUpperCase() ?? '?';
+
+  const datos = [
+    { icon: 'user', label: 'Nombre',  valor: nombre },
+    { icon: 'at',   label: 'Usuario', valor: perfil?.username },
+    { icon: 'card', label: 'Carnet',  valor: perfil?.carnet ?? perfil?.numero_carnet },
+    { icon: 'book', label: 'Curso',   valor: perfil?.curso ?? perfil?.grado },
+  ].filter(d => d.valor);
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+      <AppBar subtitle="Perfil" />
+
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         {loading ? (
-          <div className="text-center py-16 text-gray-500">Cargando...</div>
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--faint)', fontSize: 14 }}>
+            Cargando…
+          </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <div className="flex justify-center mb-5">
-              <div className="w-16 h-16 rounded-full bg-[#1e3a5f] flex items-center justify-center text-white text-2xl font-bold">
-                {perfil?.nombre?.[0]?.toUpperCase() ??
-                  perfil?.first_name?.[0]?.toUpperCase() ??
-                  perfil?.username?.[0]?.toUpperCase() ??
-                  '?'}
+          <>
+            {/* Cabecera con avatar */}
+            <div style={{
+              background: 'var(--navy)', padding: '10px 20px 30px',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+            }}>
+              <div style={{
+                width: 84, height: 84, borderRadius: 999,
+                background: 'var(--gold)', color: 'var(--navy-deep)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'Lora, serif', fontSize: 38, fontWeight: 700,
+                border: '3px solid rgba(255,255,255,.25)',
+              }}>
+                {inicial}
+              </div>
+              <div style={{ textAlign: 'center', color: '#fff' }}>
+                <div style={{ fontFamily: 'Lora, serif', fontSize: 20, fontWeight: 600 }}>{nombre}</div>
+                {perfil?.email && (
+                  <div style={{ fontSize: 12.5, opacity: .75, marginTop: 2 }}>{perfil.email}</div>
+                )}
               </div>
             </div>
 
-            <dl className="space-y-3 text-sm">
-              {(perfil?.nombre || perfil?.first_name) && (
-                <div className="flex justify-between border-b border-gray-100 pb-3">
-                  <dt className="text-gray-500 font-medium">Nombre</dt>
-                  <dd className="text-gray-800 font-semibold">
-                    {perfil.nombre ??
-                      `${perfil.first_name ?? ''} ${perfil.last_name ?? ''}`.trim()}
-                  </dd>
-                </div>
-              )}
-              {perfil?.username && (
-                <div className="flex justify-between border-b border-gray-100 pb-3">
-                  <dt className="text-gray-500 font-medium">Usuario</dt>
-                  <dd className="text-gray-800">{perfil.username}</dd>
-                </div>
-              )}
-              {(perfil?.carnet || perfil?.numero_carnet) && (
-                <div className="flex justify-between border-b border-gray-100 pb-3">
-                  <dt className="text-gray-500 font-medium">Carnet</dt>
-                  <dd className="text-gray-800">{perfil.carnet ?? perfil.numero_carnet}</dd>
-                </div>
-              )}
-              {perfil?.email && (
-                <div className="flex justify-between pb-1">
-                  <dt className="text-gray-500 font-medium">Email</dt>
-                  <dd className="text-gray-800">{perfil.email}</dd>
-                </div>
-              )}
-            </dl>
+            {/* Mis datos */}
+            <div style={{ padding: '18px 16px 20px' }}>
+              <div style={{
+                fontFamily: 'Lora, serif', fontSize: 15, fontWeight: 600,
+                color: 'var(--ink)', marginBottom: 8,
+              }}>
+                Mis datos
+              </div>
 
-            <button
-              onClick={cerrarSesion}
-              className="mt-6 w-full py-2.5 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 transition-colors"
-            >
-              Cerrar sesión
-            </button>
-          </div>
+              {datos.length > 0 && (
+                <div style={{
+                  background: 'var(--surface)', border: '1px solid var(--border)',
+                  borderRadius: 14, overflow: 'hidden', marginBottom: 18,
+                }}>
+                  {datos.map(({ icon, label, valor }, i) => (
+                    <div key={label} style={{
+                      display: 'flex', alignItems: 'center', gap: 13,
+                      padding: '13px 15px',
+                      borderTop: i ? '1px solid var(--border)' : 'none',
+                    }}>
+                      <div style={{
+                        width: 36, height: 36, borderRadius: 10,
+                        background: 'var(--surface-alt)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                      }}>
+                        <Icon name={icon} size={18} color="var(--navy)" stroke={1.9} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 11.5, color: 'var(--faint)', fontWeight: 500 }}>{label}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}>{valor}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={cerrarSesion}
+                style={{
+                  width: '100%', height: 50,
+                  border: '1px solid var(--no)', borderRadius: 13, cursor: 'pointer',
+                  background: 'var(--no-bg)', color: 'var(--no)',
+                  fontSize: 15, fontWeight: 600,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                }}
+              >
+                <Icon name="logout" size={19} stroke={2} />
+                Cerrar sesión
+              </button>
+            </div>
+          </>
         )}
       </div>
+
+      <BottomNav />
     </div>
   );
 }
