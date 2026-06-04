@@ -40,7 +40,7 @@ export default function DetalleLibro() {
 
             <p className="text-gray-600 text-sm mb-6">
               {Array.isArray(libro.autores)
-                ? libro.autores.map((a) => a.nombre ?? a).join(', ')
+                ? libro.autores.map((a) => `${a.nombres ?? ''} ${a.apellidos ?? ''}`.trim() || a.nombre || a).join(', ')
                 : libro.autores ?? '—'}
             </p>
 
@@ -77,15 +77,19 @@ export default function DetalleLibro() {
               {libro.editorial && (
                 <>
                   <dt className="text-gray-500 font-medium">Editorial</dt>
-                  <dd className="text-gray-800">{libro.editorial}</dd>
+                  <dd className="text-gray-800">{libro.editorial?.nombre ?? libro.editorial}</dd>
                 </>
               )}
               {libro.categoria && (
                 <>
                   <dt className="text-gray-500 font-medium">Categoría</dt>
-                  <dd className="text-gray-800">
-                    {libro.categoria?.nombre ?? libro.categoria}
-                  </dd>
+                  <dd className="text-gray-800">{libro.categoria?.descripcion ?? libro.categoria?.nombre ?? libro.categoria}</dd>
+                </>
+              )}
+              {libro.tipo && (
+                <>
+                  <dt className="text-gray-500 font-medium">Tipo</dt>
+                  <dd className="text-gray-800">{libro.tipo?.nombre ?? libro.tipo}</dd>
                 </>
               )}
               {libro.anio && (
