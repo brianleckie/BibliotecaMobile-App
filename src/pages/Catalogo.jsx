@@ -146,7 +146,7 @@ export default function Catalogo() {
                   fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 }}
               >
-                {c.nombre}
+                {c.descripcion ?? c.nombre}
               </button>
             ))}
           </div>
