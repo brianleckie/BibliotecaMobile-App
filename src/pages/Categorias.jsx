@@ -22,7 +22,7 @@ export default function Categorias() {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+    <div style={{ height: 'var(--page-h)', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
       <div style={{ background: 'var(--navy)', flexShrink: 0 }}>
         <AppBar />
       </div>

@@ -40,7 +40,7 @@ export default function Perfil() {
   ].filter(d => d.valor);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+    <div style={{ height: 'var(--page-h)', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
       <AppBar subtitle="Perfil" />
 
       <div style={{ flex: 1, overflowY: 'auto' }}>

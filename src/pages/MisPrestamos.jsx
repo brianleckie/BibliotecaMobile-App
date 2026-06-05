@@ -32,7 +32,7 @@ export default function MisPrestamos() {
   const activos = prestamos.filter(p => (p.estado?.toUpperCase()) !== 'ENTREGADO');
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+    <div style={{ height: 'var(--page-h)', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
       <AppBar subtitle="Mis Préstamos" />
 
       <div style={{ flex: 1, overflowY: 'auto' }}>
