@@ -17,6 +17,12 @@
   --no-bg: #f7e9e4;
   --warn: #c98a12;
   --warn-bg: #fbf0d8;
+  /* Altura dinámica del viewport — fix para iOS Safari */
+  --page-h: 100vh;
+}
+
+@supports (height: 100svh) {
+  :root { --page-h: 100svh; }
 }
 
 * {
@@ -33,7 +39,7 @@ body {
 
 #root {
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--page-h);
 }
 
 button {
@@ -44,3 +50,26 @@ input, select, textarea {
   font-family: 'Work Sans', system-ui, sans-serif;
   font-size: 16px; /* evita zoom automático en iOS Safari */
 }
+
+/* Grid responsive para el catálogo de libros */
+.book-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px 20px;
+}
+
+@media (min-width: 600px) {
+  .book-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+@media (min-width: 960px) {
+  .book-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
